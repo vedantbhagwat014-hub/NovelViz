@@ -41,7 +41,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
     "http://localhost:3000"
-    "https://novel-viz-liard.vercel.app"
+    "https://novel-lpj5yqz0x-vedant-bhagwats-projects.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
