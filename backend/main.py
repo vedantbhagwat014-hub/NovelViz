@@ -39,7 +39,10 @@ app = FastAPI(title="NovelViz Backend Engine")
 # Enable Cross-Origin Resource Sharing for the Next.js local server domain
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+    "http://localhost:3000"
+    "https://novel-viz-liard.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
