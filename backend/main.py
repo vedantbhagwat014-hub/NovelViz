@@ -40,7 +40,7 @@ app = FastAPI(title="NovelViz Backend Engine")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "http://localhost:3000"
+    "http://localhost:3000",
     "https://novel-viz-liard.vercel.app"
     ],
     allow_credentials=True,
