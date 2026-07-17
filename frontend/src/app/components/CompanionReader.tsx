@@ -84,13 +84,16 @@ export default function CompanionReader({ bookId, file, chapters }: { bookId: nu
 
   // FIX: Extract actual text from the PDF and send it to the AI
  // FIX: Robust Pre-fetching with Mount Checking
+// FIX: Stable Fetching without Aggressive Rate Limiting
   useEffect(() => {
     if (!currentChapter || !pdfDoc) return;
 
-    let isMounted = true; // Prevents state updates if the user scrolls away too fast
+    let isMounted = true; 
 
-    const fetchAiIllustration = async (chapterToFetch: Chapter, isPrefetch = false) => {
-      if (!isPrefetch) setIsGenerating(true);
+    const fetchAiIllustration = async (chapterToFetch: Chapter) => {
+      // 1. Instantly clear the old image and show the loading spinner
+      setCurrentImageUrl(null);
+      setIsGenerating(true);
       
       try {
         const page = await pdfDoc.getPage(chapterToFetch.start_page);
@@ -108,31 +111,23 @@ export default function CompanionReader({ bookId, file, chapters }: { bookId: nu
 
         const data = await response.json();
         
-        // Only update the main screen if this was the current chapter AND the user hasn't scrolled away
-        if (!isPrefetch && isMounted && data.image_url) {
+        // 2. Only update if the user hasn't scrolled away while we were waiting
+        if (isMounted && data.image_url) {
           setCurrentImageUrl(data.image_url);
         }
       } catch (error) {
         console.error(`Failed to generate image for chapter ${chapterToFetch.chapter_number}:`, error);
       } finally {
-        if (!isPrefetch && isMounted) setIsGenerating(false);
+        if (isMounted) setIsGenerating(false);
       }
     };
 
-    // 1. Fetch the current chapter immediately
-    fetchAiIllustration(currentChapter, false);
-
-    // 2. Pre-fetch the next chapter in the background
-    const nextChapter = chapters.find(c => c.chapter_number === currentChapter.chapter_number + 1);
-    if (nextChapter) {
-      // Small timeout so we don't hammer the API with two requests at the exact same millisecond
-      setTimeout(() => fetchAiIllustration(nextChapter, true), 1000); 
-    }
+    fetchAiIllustration(currentChapter);
 
     return () => {
-      isMounted = false; // Cleanup function to stop rogue updates
+      isMounted = false; 
     };
-  }, [currentChapter?.chapter_number, pdfDoc, chapters]);
+  }, [currentChapter?.chapter_number, pdfDoc]); // Removed 'chapters' array to prevent infinite re-renders
 
   return (
     <div className="flex h-[85vh] w-full bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden mt-6 shadow-2xl">
