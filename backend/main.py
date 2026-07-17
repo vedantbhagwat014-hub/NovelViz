@@ -17,7 +17,13 @@ import urllib.parse
 # Load your secret keys from the .env file
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=Ab8RN6IrqJOkUWy6BM8Zw50QuRQUntXoj2JLrrk6fILvEqGQMA)
+if GEMINI_API_KEY:
+    print(f"DEBUG: Key length is {len(GEMINI_API_KEY)}")
+    print(f"DEBUG: Key starts with {GEMINI_API_KEY[:4]}")
+else:
+    print("DEBUG: API Key is completely missing (None)")
+# -------------------------
+genai.configure(api_key=GEMINI_API_KEY)
 
 # # Hugging Face Setup
 # HF_TOKEN = os.getenv("HF_TOKEN")
