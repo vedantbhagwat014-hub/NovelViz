@@ -10,8 +10,7 @@ def extract_chapter_boundaries(pdf_path: str) -> List[Dict[str, Any]]:
     
     # Matches common structural chapter declarations (e.g., "Chapter One", "CHAPTER 5", "Chapter IX")
     chapter_regex = re.compile(
-        r'^\s*(chapter|chap\.|book|act|section)\s+([0-9a-zA-Z\-\u2014]+)', 
-        re.IGNORECASE
+        r"^\s*(?:Chapter\s+)?(?:[0-9]+|[IVXLCM]+)\s*$", re.IGNORECASE | re.MULTILINE
     )
 
     for page_idx in range(total_pages):
