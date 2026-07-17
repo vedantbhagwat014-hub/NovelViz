@@ -37,7 +37,7 @@ export default function UploadForm({ onUploadSuccess }: { onUploadSuccess: (data
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8000/api/books/upload', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/books/upload`, {
         method: 'POST',
         body: formData,
       });
