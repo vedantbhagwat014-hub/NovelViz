@@ -17,7 +17,7 @@ import urllib.parse
 # Load your secret keys from the .env file
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key=Ab8RN6IrqJOkUWy6BM8Zw50QuRQUntXoj2JLrrk6fILvEqGQMA)
 
 # # Hugging Face Setup
 # HF_TOKEN = os.getenv("HF_TOKEN")
