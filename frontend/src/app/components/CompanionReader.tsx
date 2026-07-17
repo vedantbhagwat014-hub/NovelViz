@@ -67,9 +67,20 @@ export default function CompanionReader({ bookId, file, chapters }: { bookId: nu
     };
   }, [numPages, bookId]); 
 
-  const currentChapter = chapters.find(
+ // 1. Try to find the exact chapter for this page
+  let currentChapter = chapters.find(
     (ch) => activePage >= ch.start_page && activePage <= ch.end_page
   );
+
+  // 2. FALLBACK: If the page isn't in a strict range, find the closest preceding chapter.
+  if (!currentChapter && chapters.length > 0) {
+    currentChapter = [...chapters].reverse().find(ch => activePage >= ch.start_page) || chapters[0];
+  }
+
+  // 3. DEBUG LOGS: Watch exactly what React sees
+  console.log("Current Page:", activePage);
+  console.log("PDF Loaded:", !!pdfDoc);
+  console.log("Current Chapter Selected:", currentChapter);
 
   // FIX: Extract actual text from the PDF and send it to the AI
  // FIX: Robust Pre-fetching with Mount Checking
